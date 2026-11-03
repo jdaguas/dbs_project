@@ -140,7 +140,8 @@
       <p class="oneliner">
         Illinois residents hear about new laws from the news but can't easily tell what those laws
         actually do. CivicPulse explains Illinois bills and laws in plain English, and every claim
-        links back to the line of the bill it came from.
+        links back to the line of the bill it came from. Enter your address to see who represents
+        you in Springfield and what they've sponsored.
       </p>
     </div>
   </header>
@@ -221,6 +222,8 @@
         <li><strong>See what's new</strong>Laws about to take effect, and bills that have passed at least one chamber.</li>
         <li><strong>Open a bill</strong>Get a plain-English breakdown: its main point, what it actually <em>requires</em> versus what it only studies or reports on, and who it affects.</li>
         <li><strong>Check the source</strong>Every sentence in the breakdown sits next to the exact line of the bill it comes from, with a link to the official text.</li>
+        <li><strong>See who's behind it</strong>Each bill lists its House and Senate sponsors. Click a sponsor to see the other bills they've sponsored and how to contact them.</li>
+        <li><strong>Find your legislators</strong>Enter your Illinois address to find your state representative and state senator, with their official contact information and the bills they've sponsored. It uses your exact address, not just your ZIP code, because one ZIP code can span several districts.</li>
         <li><strong>Follow it</strong>Sign up, follow bills, and come back to see where they stand and when they take effect.</li>
       </ol>
 
@@ -294,6 +297,8 @@
             <li>Import Illinois bills that have passed at least one chamber, plus enacted laws.</li>
             <li>AI breakdowns with quoted sources, generated once and saved.</li>
             <li>Bill page and a “new laws taking effect” list.</li>
+            <li>Sponsors on every bill page, linked to legislator pages.</li>
+            <li>Legislator lookup: enter an address to get your state representative and senator, with contact info.</li>
             <li>Sign-up and following bills.</li>
             <li>Quote check and answer-key evals running.</li>
             <li>Deployed on Vercel.</li>
@@ -320,7 +325,8 @@
             <li>A “What changes for you on January 1, 2027” page, timed for the month before.</li>
             <li>Filter by topic, such as AI and technology, housing, or schools.</li>
             <li>Eval results shown on the site (“accurate on X of 10”).</li>
-            <li><em>If time allows:</em> related news links, or finding your state legislators.</li>
+            <li>“Your legislators' bills”: after the lookup, see what your own representative and senator sponsored, with plain-English breakdowns.</li>
+            <li><em>If time allows:</em> related news links.</li>
           </ul>
         </div>
 
@@ -333,7 +339,8 @@
         <li>Matching laws to campaign promises, rating lawmakers, or predicting whether a bill will pass.</li>
         <li>AI opinions on whether a law is good or bad.</li>
         <li>Version-by-version diffs of bill text.</li>
-        <li>Email alerts and contacting legislators (maybe after v2).</li>
+        <li>Email alerts (maybe after v2).</li>
+        <li>Sending messages to legislators from the app. CivicPulse shows official contact info; you reach out yourself.</li>
       </ul>
 
       <h3>How I'll know it works</h3>
@@ -353,6 +360,16 @@
             <td>Data</td>
             <td><a href="https://ftp.ilga.gov/">Illinois General Assembly file repository</a></td>
             <td>Official, free, with no API key and nightly updates. It has every bill's status, actions with dates (including effective dates), sponsors, synopsis, and full text.</td>
+          </tr>
+          <tr>
+            <td>Address → district</td>
+            <td><a href="https://geocoding.geo.census.gov/">U.S. Census Geocoder</a></td>
+            <td>Free, with no key. It turns an address into Illinois House and Senate districts, which is more accurate than matching by ZIP code.</td>
+          </tr>
+          <tr>
+            <td>Legislators</td>
+            <td><a href="https://github.com/openstates/people">Open States people data</a></td>
+            <td>Free and openly licensed. It lists all 177 Illinois legislators by district, with email, phone, and office addresses. I'll download it rather than call the rate-limited API.</td>
           </tr>
           <tr>
             <td>AI</td>
@@ -403,7 +420,7 @@
   <footer>
     <div class="wrap">
       CivicPulse · Project proposal for Design, Build, Ship (MPCS 51238), Autumn 2026.<br>
-      Data from the <a href="https://www.ilga.gov/">Illinois General Assembly</a>.
+      Data from the <a href="https://www.ilga.gov/">Illinois General Assembly</a>, the U.S. Census Bureau, and <a href="https://openstates.org/">Open States</a>.
     </div>
   </footer>
 
