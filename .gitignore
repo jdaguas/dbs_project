@@ -1,0 +1,5 @@
+# Private notes and course materials (not published)
+*.pdf
+civicpulse_project_brief.md
+.DS_Store
+.vercel

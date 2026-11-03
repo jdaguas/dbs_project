@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CivicPulse — Project Proposal</title>
+  <meta name="description" content="CivicPulse: a nonpartisan tracker that helps people follow the federal bills they care about. Project proposal for Design, Build, Ship (MPCS 51238).">
+  <style>
+    :root {
+      --ink: #1a1f2b;
+      --muted: #5b6475;
+      --line: #e3e6ec;
+      --bg: #fbfbf9;
+      --card: #ffffff;
+      --accent: #1f4e8c;
+      --accent-soft: #e8eef8;
+      --todo-bg: #fff8db;
+      --todo-line: #e0b400;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.6;
+      font-size: 17px;
+    }
+    a { color: var(--accent); }
+    .wrap { max-width: 820px; margin: 0 auto; padding: 0 24px; }
+
+    header.hero {
+      background: var(--ink);
+      color: #fff;
+      padding: 72px 0 56px;
+    }
+    .eyebrow {
+      font-size: 13px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #aab4c8;
+      margin: 0 0 12px;
+    }
+    .hero h1 { font-size: 44px; line-height: 1.1; margin: 0 0 8px; letter-spacing: -.02em; }
+    .hero .tagline { font-size: 20px; color: #d6dcea; margin: 0 0 28px; }
+    .oneliner {
+      border-left: 4px solid #7fa7e0;
+      padding: 4px 0 4px 18px;
+      font-size: 19px;
+      margin: 0;
+      color: #fff;
+    }
+
+    nav.toc {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(251,251,249,.95);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid var(--line);
+    }
+    nav.toc ul {
+      list-style: none; margin: 0 auto; padding: 12px 24px;
+      max-width: 820px; display: flex; gap: 20px; flex-wrap: wrap;
+      font-size: 14px;
+    }
+    nav.toc a { color: var(--muted); text-decoration: none; }
+    nav.toc a:hover { color: var(--accent); }
+
+    section { padding: 48px 0 8px; }
+    section h2 {
+      font-size: 26px; margin: 0 0 16px; letter-spacing: -.01em;
+    }
+    section h3 { font-size: 18px; margin: 24px 0 8px; }
+    p { margin: 0 0 14px; }
+    .muted { color: var(--muted); }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 20px 22px;
+      margin: 0 0 14px;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 640px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 34px; }
+    }
+
+    /* Placeholder blocks: replace before publishing */
+    .todo {
+      background: var(--todo-bg);
+      border: 2px dashed var(--todo-line);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 0 0 14px;
+    }
+    .todo::before {
+      content: "TO FILL IN";
+      display: block;
+      font-size: 11px; font-weight: 700; letter-spacing: .1em;
+      color: #8a6d00; margin-bottom: 6px;
+    }
+
+    .flow { counter-reset: step; list-style: none; padding: 0; margin: 0; }
+    .flow li {
+      counter-increment: step;
+      position: relative;
+      padding: 0 0 18px 52px;
+    }
+    .flow li::before {
+      content: counter(step);
+      position: absolute; left: 0; top: 0;
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--accent-soft); color: var(--accent);
+      font-weight: 700; display: flex; align-items: center; justify-content: center;
+    }
+    .flow strong { display: block; }
+
+    .timeline { border-left: 3px solid var(--line); margin-left: 8px; padding-left: 24px; }
+    .milestone { position: relative; margin-bottom: 28px; }
+    .milestone::before {
+      content: ""; position: absolute; left: -33px; top: 6px;
+      width: 15px; height: 15px; border-radius: 50%;
+      background: var(--card); border: 3px solid var(--accent);
+    }
+    .milestone.big::before { background: var(--accent); }
+    .milestone .date {
+      font-size: 13px; font-weight: 700; color: var(--accent);
+      text-transform: uppercase; letter-spacing: .06em;
+    }
+    .milestone h3 { margin: 2px 0 6px; }
+    .milestone ul { margin: 0; padding-left: 20px; }
+
+    .tag {
+      display: inline-block; font-size: 12px; font-weight: 600;
+      padding: 2px 8px; border-radius: 999px;
+      background: var(--accent-soft); color: var(--accent);
+      margin-right: 6px;
+    }
+
+    table { width: 100%; border-collapse: collapse; font-size: 15px; background: var(--card); }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+    td:first-child { font-weight: 600; white-space: nowrap; }
+
+    ul.out li { margin-bottom: 6px; }
+
+    footer {
+      margin-top: 56px; padding: 28px 0 48px;
+      border-top: 1px solid var(--line);
+      font-size: 14px; color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Design, Build, Ship · MPCS 51238 · Project Proposal</p>
+      <h1>CivicPulse</h1>
+      <p class="tagline">Follow the bills that matter to you.</p>
+      <p class="oneliner">
+        Information on federal legislation is public but scattered. CivicPulse gives
+        voters and curious people one nonpartisan place to find bills on the
+        issues they care about, see where those bills stand in Congress, and check back on them.
+      </p>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="Sections">
+    <ul>
+      <li><a href="#problem">Problem</a></li>
+      <li><a href="#users">Users</a></li>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#focus">Focus</a></li>
+      <li><a href="#roadmap">Roadmap</a></li>
+      <li><a href="#stack">Stack</a></li>
+    </ul>
+  </nav>
+
+  <main class="wrap">
+
+    <!-- PROBLEM -->
+    <section id="problem">
+      <h2>The problem</h2>
+      <p>
+        When people hear about a bill (on the news, from a friend, on social media), finding
+        out what it actually does and what happened to it later takes work. The information is
+        spread across Congress.gov, news sites, and lawmakers' own pages. Most people look once,
+        then never check back.
+      </p>
+      <p>
+        Tools like Congress.gov and GovTrack already exist and are thorough. I'm not
+        claiming the idea is new. CivicPulse is meant to be a simpler, more personal path:
+        <strong>discover → understand → follow → check back</strong>, organized around topics
+        a person cares about rather than bill numbers.
+      </p>
+      <div class="card">
+        <strong>Hypothesis I'm testing:</strong> people would value a personal watchlist of bills,
+        organized by their policy interests, with plain status updates and links back to the
+        official sources.
+      </div>
+    </section>
+
+    <!-- USERS -->
+    <section id="users">
+      <h2>Who it's for, and what they told me</h2>
+      <p>
+        <strong>Primary user:</strong> U.S. voters and civically curious people who want to keep
+        up with federal legislation but don't regularly use Congress.gov.
+      </p>
+
+      <h3>Interviews</h3>
+      <p class="muted">
+        I asked each person: <em>“Tell me about the last time you heard about a proposed law or
+        bill you cared about. How did you learn what it would do, and did you ever check what
+        happened afterward?”</em>, followed by where they looked for updates, what was confusing,
+        and what would have helped most.
+      </p>
+
+      <!-- Replace each block below with a real interview. Use their actual words. -->
+      <div class="todo">
+        <strong>Person 1</strong>: who they are (e.g., “grad student, votes every election”)<br>
+        <em>“Direct quote in their words.”</em><br>
+        Key takeaway:
+      </div>
+      <div class="todo">
+        <strong>Person 2</strong>: who they are<br>
+        <em>“Direct quote in their words.”</em><br>
+        Key takeaway:
+      </div>
+      <div class="todo">
+        <strong>Person 3</strong>: who they are<br>
+        <em>“Direct quote in their words.”</em><br>
+        Key takeaway:
+      </div>
+
+      <h3>What I learned</h3>
+      <div class="todo">
+        2–3 patterns across the interviews, and what they changed about the plan.
+        For example: which of these mattered most to people: status updates, plain-English
+        explanations, related news, or contacting their representative?
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how">
+      <h2>How it works</h2>
+      <ol class="flow">
+        <li><strong>Pick your issues</strong>Healthcare, education, housing, technology &amp; AI, environment, and so on.</li>
+        <li><strong>Discover bills</strong>Browse and search current federal bills, filtered by topic and recent activity.</li>
+        <li><strong>Understand a bill</strong>Official title, summary (when one exists), current status, latest actions, and a timeline, all linked to the official record.</li>
+        <li><strong>See who's behind it</strong>Open the sponsor's and cosponsors' profiles, with the roles shown clearly.</li>
+        <li><strong>Follow it</strong>Add bills to a watchlist and come back to see what's changed.</li>
+        <li><strong>Go further</strong>Read related reporting (labeled separately from official records) and find official contact pages for your senators and representative.</li>
+      </ol>
+
+      <h3>Ground rules for accuracy</h3>
+      <ul>
+        <li><strong>Strictly nonpartisan.</strong> No scores, ratings, or AI opinions on whether a bill is good or bad.</li>
+        <li><strong>Precise terms.</strong> Sponsors <em>introduce</em> bills; the President <em>signs or vetoes</em> them. Sponsor and cosponsor roles are always labeled.</li>
+        <li><strong>Stable IDs.</strong> Bills are tracked by Congress number + bill type + bill number (e.g., 119th Congress, H.R. 1234).</li>
+        <li><strong>Sources first.</strong> Every status links to its primary record. News is labeled as third-party.</li>
+        <li><strong>Honest gaps.</strong> Not every bill has an official summary or recorded vote. When something is missing, the page says so instead of filling it in.</li>
+      </ul>
+    </section>
+
+    <!-- FOCUS -->
+    <section id="focus">
+      <h2>My focus: Holistic Journey</h2>
+      <!-- Draft rationale: confirm or rewrite in your own words. -->
+      <p>
+        CivicPulse's value is the whole path, from finding a bill to following it to coming
+        back later. No single step is new, so the product only works if every step is
+        connected and works on the live site. That fits Holistic Journey: one person's path
+        from start to finish, touching design, systems, and users without going deep in any
+        one of them.
+      </p>
+      <p>
+        I'm not choosing the AI focus on purpose. Having a model summarize or judge legislation
+        conflicts with the nonpartisan, source-first goal, and getting it wrong would cost me
+        users' trust.
+      </p>
+      <div class="todo">
+        Confirm this focus (or change it), and add a sentence on what you personally want to
+        learn from it.
+      </div>
+    </section>
+
+    <!-- ROADMAP -->
+    <section id="roadmap">
+      <h2>Roadmap</h2>
+      <div class="timeline">
+
+        <div class="milestone">
+          <div class="date">Nov 3 – Nov 10</div>
+          <h3>Prep</h3>
+          <ul>
+            <li>Get a Congress.gov API key and explore the bill, member, and action endpoints.</li>
+            <li>Check how reliable topic data (policy areas and subjects) is for filtering.</li>
+            <li>Finish user interviews and choose the main feature for following bills.</li>
+          </ul>
+        </div>
+
+        <div class="milestone big">
+          <div class="date">Nov 10 – Nov 17 · v1 due</div>
+          <h3>v1: works end to end</h3>
+          <ul>
+            <li>Next.js app deployed on Vercel, with the Congress.gov API called server-side.</li>
+            <li>Bill browse and search, with topic filters only where the data supports them.</li>
+            <li>Bill detail page: official title, summary if available, status, latest actions, sponsor, and source links.</li>
+            <li>Basic member profile pages: sponsored vs. cosponsored bills, official website.</li>
+            <li>Sign-up and a simple watchlist, so real people can use it from start to finish.</li>
+          </ul>
+          <p class="muted" style="margin-top:8px">
+            <span class="tag">Riskiest first</span>Topic filtering and API limits. If topic data
+            is too sparse, v1 falls back to search plus recent activity.
+          </p>
+        </div>
+
+        <div class="milestone">
+          <div class="date">Nov 18 – Nov 24</div>
+          <h3>Put it in front of people</h3>
+          <ul>
+            <li>Get v1 into the hands of the people I interviewed, and watch where they get stuck.</li>
+            <li>Save topic preferences and build a personalized home feed.</li>
+            <li>Visual legislative timeline and progress indicator on bill pages.</li>
+          </ul>
+        </div>
+
+        <div class="milestone big">
+          <div class="date">Nov 25 – Dec 1 · Project fair</div>
+          <h3>v2: polish and go further</h3>
+          <ul>
+            <li>“What changed” on the watchlist since your last visit.</li>
+            <li>Related news links with publication dates and clear source labels, kept only when they're about the exact bill.</li>
+            <li>Official contact links for your senators and representative, handling ZIP codes that span more than one district.</li>
+            <li><em>Stretch:</em> email alerts when a followed bill's status changes.</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <h3>Out of scope</h3>
+      <ul class="out">
+        <li>State and local legislation, elections, and ballot matching.</li>
+        <li>Endorsements, political compatibility scores, or ratings of lawmakers.</li>
+        <li>AI-generated judgments about legislation.</li>
+        <li>Automated messages to representatives, mass emailing, or lobbying tools.</li>
+        <li>Real-time push notifications or complex data pipelines before basic tracking is reliable.</li>
+      </ul>
+
+      <h3>How I'll know it works</h3>
+      <ul>
+        <li>Each of my interviewees can find a bill they care about, understand its status, and follow it, without my help.</li>
+        <li>People come back to their watchlist after the first visit.</li>
+        <li>Every status shown matches the official Congress.gov record.</li>
+      </ul>
+    </section>
+
+    <!-- STACK -->
+    <section id="stack">
+      <h2>Tech stack, MCP servers &amp; CLIs</h2>
+      <p class="muted">The architecture follows the idea: official data in, cached on the server, a simple personal layer on top.</p>
+      <table>
+        <thead><tr><th>Piece</th><th>Choice</th><th>Why it fits</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Frontend</td>
+            <td>Next.js + Tailwind CSS</td>
+            <td>Server-side data fetching keeps the API key private. Built-in caching means fewer API calls.</td>
+          </tr>
+          <tr>
+            <td>Data</td>
+            <td>Congress.gov API (free key)</td>
+            <td>The official source for bills, members, sponsors, cosponsors, summaries, and actions.</td>
+          </tr>
+          <tr>
+            <td>Accounts &amp; data</td>
+            <td>Supabase (Auth + Postgres)</td>
+            <td>Sign-up, saved topics, and watchlists. Row-level security so each person only sees their own data.</td>
+          </tr>
+          <tr>
+            <td>Hosting</td>
+            <td>Vercel (free tier)</td>
+            <td>Deploys straight from GitHub, with preview URLs for testing with users.</td>
+          </tr>
+          <tr>
+            <td>News (v2)</td>
+            <td>To be decided</td>
+            <td>A news search API or hand-picked links, depending on free-tier terms and how relevant the results are.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>MCP servers</h3>
+      <ul>
+        <li><strong>Supabase MCP</strong>: lets Claude Code inspect tables, apply migrations, and check security advisors while I build the watchlist schema.</li>
+      </ul>
+
+      <h3>CLIs</h3>
+      <ul>
+        <li><strong>Git / GitHub CLI</strong>: version control and the project repository.</li>
+        <li><strong>Node.js / npm</strong>: running and building the Next.js app.</li>
+        <li><strong>Vercel CLI</strong>: deploys, preview URLs, and keeping environment variables (the API key) out of the code.</li>
+        <li><strong>Supabase CLI</strong>: a local database and migrations under version control.</li>
+      </ul>
+
+      <h3>Free tiers &amp; limits</h3>
+      <ul>
+        <li>All services stay on the free tier, with no payment method added.</li>
+        <li>The Congress.gov API is rate-limited per key, so responses are cached on the server instead of being fetched on every page view.</li>
+        <li>Usage limits and alerts are turned on in Vercel and Supabase wherever those services offer them.</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="wrap">
+      CivicPulse · Project proposal for Design, Build, Ship (MPCS 51238), Autumn 2026.<br>
+      Data will come from <a href="https://www.congress.gov/">Congress.gov</a>, the official source for U.S. federal legislative information.
+    </div>
+  </footer>
+
+</body>
+</html>
