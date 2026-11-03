@@ -209,7 +209,7 @@
 
       <h3>What I learned</h3>
       <ul>
-        <li><strong>Everyone cared about what passed</strong>, not bills that might go nowhere. That changed my plan from tracking pending bills to focusing on laws and bills that have passed at least one chamber.</li>
+        <li><strong>Everyone cared most about what passed.</strong> So the home page leads with laws taking effect and bills that have passed a chamber. Every pending bill is still searchable, because I also want to follow what's coming, like the AI bills I was curious about.</li>
         <li><strong>They hear about government secondhand</strong>, from news and talk shows, and want a way to check the record themselves.</li>
         <li><strong>State, not just federal.</strong> I originally planned a federal tracker, but Illinois laws are what showed up on my parents' local news, and what my friend asked about.</li>
       </ul>
@@ -219,7 +219,7 @@
     <section id="how">
       <h2>How it works</h2>
       <ol class="flow">
-        <li><strong>See what's new</strong>Laws about to take effect, and bills that have passed at least one chamber.</li>
+        <li><strong>See what's new, or search anything</strong>The home page shows laws about to take effect and bills that have passed at least one chamber. You can search every pending bill in the current session by keyword, sponsor, or bill number.</li>
         <li><strong>Open a bill</strong>Get a plain-English breakdown: its main point, what it actually <em>requires</em> versus what it only studies or reports on, and who it affects.</li>
         <li><strong>Check the source</strong>Every sentence in the breakdown sits next to the exact line of the bill it comes from, with a link to the official text.</li>
         <li><strong>See who's behind it</strong>Each bill lists its House and Senate sponsors. Click a sponsor to see the other bills they've sponsored and how to contact them.</li>
@@ -294,8 +294,8 @@
           <div class="date">Nov 10 – Nov 17 · v1 due</div>
           <h3>v1: works end to end</h3>
           <ul>
-            <li>Import Illinois bills that have passed at least one chamber, plus enacted laws.</li>
-            <li>AI breakdowns with quoted sources, generated once and saved.</li>
+            <li>Import every bill in the current session: status, sponsors, dates, and the official synopsis. No AI is needed for this part.</li>
+            <li>AI breakdowns with quoted sources, written the first time someone opens a bill and then saved. Bills that passed a chamber, and enacted laws, are explained in advance.</li>
             <li>Bill page and a “new laws taking effect” list.</li>
             <li>Sponsors on every bill page, linked to legislator pages.</li>
             <li>Legislator lookup: enter an address to get your state representative and senator, with contact info.</li>
@@ -335,7 +335,6 @@
       <h3>Out of scope</h3>
       <ul>
         <li>Federal legislation. My parents asked about Congress, so this is a future direction.</li>
-        <li>Bills that haven't passed at least one chamber.</li>
         <li>Matching laws to campaign promises, rating lawmakers, or predicting whether a bill will pass.</li>
         <li>AI opinions on whether a law is good or bad.</li>
         <li>Version-by-version diffs of bill text.</li>
@@ -374,7 +373,7 @@
           <tr>
             <td>AI</td>
             <td>Claude API (Anthropic)</td>
-            <td>Reads bill text and returns a structured breakdown with quotes. Each law is explained once and saved, which keeps costs low.</td>
+            <td>Reads bill text and returns a structured breakdown with quotes. Each bill is explained only when someone first opens it, then saved, so I only pay for bills people actually read.</td>
           </tr>
           <tr>
             <td>App</td>
@@ -411,7 +410,8 @@
       <ul>
         <li>Vercel and Supabase stay on their free tiers.</li>
         <li>The Claude API is the one paid piece. I'll set a monthly spend limit in the Anthropic Console before running anything.</li>
-        <li>Breakdowns are generated once per bill version and cached, never on page view.</li>
+        <li>Each bill version gets explained at most once. After that, every visitor sees the saved copy.</li>
+        <li>Only signed-in users can trigger a new breakdown, with a daily limit per person, so a bot clicking through thousands of bills can't drain the spending cap.</li>
       </ul>
     </section>
 
